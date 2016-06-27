@@ -27,10 +27,12 @@ if ~exist(pickdir)
     mkdir(pickdir)
 end
 
+addpath('function_stagthr');
+
 disp('Welcome to run_stagthr. For help type "?" at any time.');
 
-if exist('lastparams_stagthr.mat','file')==2
-    load('lastparams_stagthr.mat')
+if exist('paramfiles_stagthr/lastparams_stagthr.mat','file')==2
+    load('paramfiles_stagthr/lastparams_stagthr.mat')
     load(sprintf('%s',filename));
     disp('Your most recent station has been loaded. What would you like to do? ')
 else
@@ -41,14 +43,14 @@ else
     dbname=sprintf('seq%sdb',dbname);
     filename=sprintf('%s/%s_%s_%s',data_path,sta,chan,dbname);
     load(sprintf('%s',filename));
-    save('lastparams_stagthr.mat','filename','sta','chan','dbname');
+    save('paramfiles_stagthr/lastparams_stagthr.mat','filename','sta','chan','dbname');
 end
 
 while 1
     in=input('','s');
     
-    load('lastproparams_stagthr.mat');
-    load('lastplparams_stagthr.mat');
+    load('paramfiles_stagthr/lastproparams_stagthr.mat');
+    load('paramfiles_stagthr/lastplparams_stagthr.mat');
     
     % HELP MENU
     if in=='?'; 
@@ -71,7 +73,7 @@ while 1
         dbname=sprintf('seq%sdb',dbname);
         filename=sprintf('%s/%s_%s_%s',data_path,sta,chan,dbname);
         load(sprintf('%s',filename));
-        save('lastparams_stagthr.mat','filename','sta','chan','dbname');
+        save('paramfiles_stagthr/lastparams_stagthr.mat','filename','sta','chan','dbname');
         
        
     % DATA PROCESSING   
@@ -99,7 +101,7 @@ while 1
         end
         [datr,ttr] = reduce_stagthr(vr,datf,tt,nsamp,dt,delkms,nsh,nsamps);
         proparams = [flo,fhi,idcm,nstdzero,vr];
-        save('lastproparams_stagthr.mat','proparams');
+        save('paramfiles_stagthr/lastproparams_stagthr.mat','proparams');
         
     % PLOTTING
     elseif in=='pl'
@@ -132,7 +134,7 @@ while 1
         end
         plot_stagthr(datpl,ttr,delkms,clow,chigh,time1,time2,sta,chan,flo,fhi,dbname,idcm,vrpl);
         plotparams = [clow,chigh,time1,time2,plty];
-        save('lastplparams_stagthr.mat','plotparams');
+        save('paramfiles_stagthr/lastplparams_stagthr.mat','plotparams');
        
     % PICKING
     elseif in=='pi'
