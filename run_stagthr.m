@@ -5,18 +5,24 @@
 % All functions that go with this package are *_stagthr.m
 % Helen Janiszewski, 06/16
 %%%%%%%%%%%%%%%%%%%%%
-% Note: data must have been saved as matfiles with format
-% create_recsec.m makes these matfiles for data stored in antelope
-% database.
+% Note: data must have been saved as matfiles with variables:
+% nsamp - numer of time samples per trace 
+% ntr - number of traces 
+% deltas - vector of shot to station angle offsets (length:ntr)
+% nsamps - vector with length of each record (length:nsamp)
+% tt - time vector (length:nsamp)
+% dat - nsamp x ntr matrix storing station record data
 %%%%%%%%%%%%%%%%%%%%%
 % Required scripts and functions: filter_stagthr, reduce_stagthr,
 % plot_stagthr, pick_stagthr, save_stagthr, load_stagthr
 
 clear all; close all;
 
+% DATA INPUT DIRECTORIES
 data_path = '~/RESEARCH/DATA/RIDGE2TRENCH/STATIONGATHERS';
 pickdir = '~/RESEARCH/DATA/RIDGE2TRENCH/PICKS';
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if ~exist(pickdir)
     mkdir(pickdir)
 end
@@ -41,6 +47,9 @@ end
 while 1
     in=input('','s');
     
+    load('lastproparams_stagthr.mat');
+    load('lastplparams_stagthr.mat');
+    
     % HELP MENU
     if in=='?'; 
         disp(' ')
@@ -50,6 +59,9 @@ while 1
         disp('Process: pr');
         disp('Plot: pl');
         disp('Start picking: pi');
+        
+    elseif isempty(in)==1
+        disp('That is not a valid command. Type "?" for help.')
         
     % LOAD NEW STATION
     elseif in=='l'; %load new station
@@ -87,6 +99,7 @@ while 1
         end
         [datr,ttr] = reduce_stagthr(vr,datf,tt,nsamp,dt,delkms,nsh,nsamps);
         proparams = [flo,fhi,idcm,nstdzero,vr];
+        save('lastproparams_stagthr.mat','proparams');
         
     % PLOTTING
     elseif in=='pl'
@@ -119,10 +132,11 @@ while 1
         end
         plot_stagthr(datpl,ttr,delkms,clow,chigh,time1,time2,sta,chan,flo,fhi,dbname,idcm,vrpl);
         plotparams = [clow,chigh,time1,time2,plty];
+        save('lastplparams_stagthr.mat','plotparams');
        
     % PICKING
     elseif in=='pi'
-        pick_stagthr(pickdir,vr);
+        pick_stagthr(pickdir,vr,sta,chan,dbname);
         
     elseif in=='q'; %quit the package
         break

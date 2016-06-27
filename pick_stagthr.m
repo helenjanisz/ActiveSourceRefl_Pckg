@@ -1,4 +1,4 @@
-function pick_stagthr(pickdir,vr)
+function pick_stagthr(pickdir,vr,sta,chan,dbname)
 
 
 disp('Left click to pick arrivals. Type "d" when finished picking to save.');
@@ -23,7 +23,7 @@ while 1
             end
             disp('Picks have been saved.');
             break
-        elseif yn=='n'
+        else
             break
         end
     elseif button=='?'
