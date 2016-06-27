@@ -18,7 +18,7 @@ colormap(bone)
 ylabel('reduced travel time, s'); xlabel('offset, km')
 axis xy
 title(sprintf('Sta  %s  Chan %s  Filter %.3f - %.3f Hz data %s decim %d Vr %.2f km/s Stack %d',...
-    sta,chan,flo,fhi, dbname,idcm, vr,stknum));
+    sta,chan,flo,fhi, dbname,idcm, vr));
 
 
 return

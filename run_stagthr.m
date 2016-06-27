@@ -39,10 +39,10 @@ else
 end
 
 while 1
-    in=input('','s')
+    in=input('','s');
     
     % HELP MENU
-    if in=='?' 
+    if in=='?'; 
         disp(' ')
         disp('HELP MANUAL');
         disp('Quit: q');
@@ -122,7 +122,7 @@ while 1
        
     % PICKING
     elseif in=='pi'
-        pick_stagthr(pickdir);
+        pick_stagthr(pickdir,vr);
         
     elseif in=='q'; %quit the package
         break
