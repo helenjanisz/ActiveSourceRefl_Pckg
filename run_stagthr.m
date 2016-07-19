@@ -13,8 +13,7 @@
 % tt - time vector (length:nsamp)
 % dat - nsamp x ntr matrix storing station record data
 %%%%%%%%%%%%%%%%%%%%%
-% Required scripts and functions: filter_stagthr, reduce_stagthr,
-% plot_stagthr, pick_stagthr, save_stagthr, load_stagthr
+% Requires functions in the _stagthr folder
 
 clear all; close all;
 
@@ -34,6 +33,7 @@ disp('Welcome to run_stagthr. For help type "?" at any time.');
 if exist('paramfiles_stagthr/lastparams_stagthr.mat','file')==2
     load('paramfiles_stagthr/lastparams_stagthr.mat')
     load(sprintf('%s',filename));
+    time=[tw0:dt:tw1-dt]';
     disp('Your most recent station has been loaded. What would you like to do? ')
 else
     disp('No previous parameters found. Please load data. ')
@@ -43,6 +43,7 @@ else
     dbname=sprintf('seq%sdb',dbname);
     filename=sprintf('%s/%s_%s_%s',data_path,sta,chan,dbname);
     load(sprintf('%s',filename));
+    time=[tw0:dt:tw1-dt]';
     save('paramfiles_stagthr/lastparams_stagthr.mat','filename','sta','chan','dbname');
 end
 
@@ -73,6 +74,7 @@ while 1
         dbname=sprintf('seq%sdb',dbname);
         filename=sprintf('%s/%s_%s_%s',data_path,sta,chan,dbname);
         load(sprintf('%s',filename));
+        time=[tw0:dt:tw1-dt]';
         save('paramfiles_stagthr/lastparams_stagthr.mat','filename','sta','chan','dbname');
         
        
@@ -99,31 +101,12 @@ while 1
         if isempty(vr)
             vr = proparams(5);
         end
-        [datr,ttr] = reduce_stagthr(vr,datf,tt,nsamp,dt,delkms,nsh,nsamps);
+        [ttr] = reduce_stagthr(vr,datf,time,nsamp,dt,delkms,nsh,nsamps);
         proparams = [flo,fhi,idcm,nstdzero,vr];
         save('paramfiles_stagthr/lastproparams_stagthr.mat','proparams');
         
     % PLOTTING
     elseif in=='pl'
-        plty = input('Which data do you want to plot (1 for filtered + reduced, 2 for filtered only)? ');
-        if isempty(plty)
-            plty = plotparams(5);
-        end
-        if plty == 1;
-            datpl = datr;
-            vrpl = vr;
-        elseif plty == 2
-            datpl = datf;
-            vrpl=0;
-        end
-        clow = input('Low Color Value: ');
-        if isempty(clow)
-            clow = plotparams(1);
-        end
-        chigh = input('High Color Value: ');
-        if isempty(chigh)
-            chigh = plotparams(2);
-        end
         time1 = input('Minimum Reduced Travel Time: ');
         if isempty(time1)
             time1 = plotparams(3);
@@ -132,8 +115,20 @@ while 1
         if isempty(time2)
             time2 = plotparams(4);
         end
-        plot_stagthr(datpl,ttr,delkms,clow,chigh,time1,time2,sta,chan,flo,fhi,dbname,idcm,vrpl);
-        plotparams = [clow,chigh,time1,time2,plty];
+        dist1 = input('Minimum Offset: ');
+        if isempty(dist1)
+            dist1 = plotparams(1);
+        end
+        dist2 = input('Maximum Offset: ');
+        if isempty(dist2)
+            dist2 = plotparams(2);
+        end
+        scfac = input('Scale Factor: ');
+        if isempty(scfac)
+            scfac = plotparams(5);
+        end
+        plot_stagthr(datf,ttr,delkms,time1,time2,dist1,dist2,sta,chan,flo,fhi,dbname,idcm,vr,scfac);
+        plotparams = [dist1,dist2,time1,time2,scfac];
         save('paramfiles_stagthr/lastplparams_stagthr.mat','plotparams');
        
     % PICKING
