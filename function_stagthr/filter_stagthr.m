@@ -1,4 +1,5 @@
 function [dat2, delkms, nsh] = filter_stagthr(flo,fhi,idcm,dt,ntr,nsamp,nsamps,dat,deltas,nstdzero)
+% [dat2, delkms, nsh] = filter_stagthr(flo,fhi,idcm,dt,ntr,nsamp,nsamps,dat,deltas,nstdzero)
 % Filtering for stagthr routine.
 %%%%%%%%%%%%%%%%%%%%
 % INPUT
@@ -11,7 +12,6 @@ function [dat2, delkms, nsh] = filter_stagthr(flo,fhi,idcm,dt,ntr,nsamp,nsamps,d
 % dat - station gather data
 % deltas - shot to station distance in degrees
 % nstdzero - noise threshold for zeroing traces
-
 % OUTPUT
 % dat2 - filtered ad decimated station gather data
 % delkms - shot to station offset vector

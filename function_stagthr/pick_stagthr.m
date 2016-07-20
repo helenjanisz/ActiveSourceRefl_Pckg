@@ -1,5 +1,6 @@
 function pick_stagthr(pickdir,vr,sta,chan,dbname)
-
+% pick_stagthr(pickdir,vr,sta,chan,dbname)
+% function that initializes arrival picking
 
 disp('Left click to pick arrivals. Type "d" when finished picking to save.');
 disp('Type "o" if you want to open existing picks. Type "?" for help.');
